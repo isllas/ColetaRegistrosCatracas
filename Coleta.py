@@ -23,7 +23,7 @@ chrome_options.add_argument("--disable-infobars")
 chrome_options.add_argument("--disable-extensions")
 chrome_options.add_argument("--disable-popup-blocking")
 chrome_options.add_argument("--disable-web-security")
-
+chrome_options.add_argument("--window-size=1920,1080")  # Definindo o tamanho da janela
 
 
 # Inicializando o driver do Chrome
