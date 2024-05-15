@@ -13,7 +13,7 @@ import sys
 
 
 # Configurações
-catraca_url = "acesso à catraca"
+catraca_url = "ip de acesso da catraca"
 
 
 # Configuração do ChromeDriver
@@ -42,13 +42,14 @@ try:
     driver.get(catraca_url)
 
     WebDriverWait(driver, 10)
-    
+
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "form-control")))
     username_fields = driver.find_elements(By.CLASS_NAME, "form-control")
 
 # Acessar o primeiro elemento
     primeiro_username = username_fields[0]
 
-    primeiro_username.send_keys("login")
+    primeiro_username.send_keys("usuario")
 
     WebDriverWait(driver, 10)
 
@@ -71,6 +72,27 @@ try:
     registros_field = registros_fields[1]
     registros_field.send_keys(Keys.ENTER)
     
+    # Obter a data atual
+    data_atual = datetime.now()
+    data_inicio = data_atual.strftime("%d-%m-%Y")
+    data_inicio_formatada = "-".join([x.lstrip("0") for x in data_inicio.split("-")])
+
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "btn-default")))
+    data_field = driver.find_elements(By.CLASS_NAME, "btn-default")
+    data_field = data_field[0]
+    data_field.send_keys(Keys.ENTER)
+
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "ngb-dp-arrow-btn")))
+    data_field = driver.find_elements(By.CLASS_NAME, "ngb-dp-arrow-btn")
+    data_field = data_field[1]
+    data_field.send_keys(Keys.ENTER) 
+
+    
+
+    seletor_data = '//div[@aria-label="'+data_inicio_formatada+'"]'
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.XPATH, seletor_data)))
+    data_inicial = driver.find_element(By.XPATH, seletor_data)
+    data_inicial.click()
 
     #Fazendo o dowload dos registros
     WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CLASS_NAME, "btn-block"))).send_keys(Keys.ENTER)
@@ -97,8 +119,8 @@ nome_arquivo = data_atual.strftime("Bilhetes %Y-%m-%d") + ".txt"  # Por exemplo,
 #Move o arquivo baixado para pasta de acesso do Sênior
 
 # Especifique o caminho do arquivo baixado e o destino para mover o arquivo
-caminho_origem = "local/destino/bilhetes.txt"
-caminho_destino = "Pasta/Destino"
+caminho_origem = "origem/bilhetes.txt"
+caminho_destino = "destino/"
 
 # Verifica se o diretório de destino existe, se não, cria o diretório
 if not os.path.exists(caminho_destino):
